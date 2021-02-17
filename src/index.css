@@ -23,6 +23,12 @@ body {
   padding: .5rem;
 }
 
+.episode-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
 .header {
   display: flex;
   justify-content: space-between;
@@ -31,6 +37,14 @@ body {
   padding: .5rem;
   position: sticky;
   top: 0;
+}
+
+.header-pages {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  width: 10%;
 }
 
 .fav-symbol {

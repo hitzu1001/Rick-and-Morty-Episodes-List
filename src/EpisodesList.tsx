@@ -1,7 +1,9 @@
-import React from 'react'
-import { IEpisode } from './interfaces'
+import React, { useContext } from 'react'
+import { Store } from './Store'
+import { IEpisode, IEpisodeProps } from './interfaces'
 
-export default function EpisodesList(props: any): JSX.Element[] {
+export default function EpisodesList(props: IEpisodeProps): JSX.Element[] {
+    const { state, dispatch } = useContext(Store)
     const { episodes, toggleFavAction, favorites } = props
 
     return episodes.map((episode: IEpisode) => {
@@ -17,13 +19,17 @@ export default function EpisodesList(props: any): JSX.Element[] {
                     src={episode.image.medium}
                     alt={`Rick and Mort ${episode.name}`}
                 />
-                <div>{episode.name}</div>
-                <section>
-                    <div>Season: {episode.season}</div>
-                    <div>Number: {episode.number}</div>
+                <section className='episode-content'>
+                    <div>
+                        <div>{episode.name}</div>
+                        <div>Season: {episode.season}</div>
+                        <div>Number: {episode.number}</div>
+                    </div>
                     <button
                         type="button"
-                        onClick={() => toggleFavAction(episode)}
+                        onClick={() =>
+                            toggleFavAction(state, dispatch, episode)
+                        }
                     >
                         {fav}
                     </button>

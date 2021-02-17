@@ -1,79 +1,25 @@
-import React, { Fragment, useContext, useEffect } from 'react'
+import React, { Fragment, useContext } from 'react'
+import { Link } from '@reach/router'
 import { Store } from './Store'
-import { IEpisode, IAction } from './interfaces'
 
-const EposodesList = React.lazy<any>(() => import('./EpisodesList'))
-
-export default function App(): JSX.Element {
-    const { state, dispatch } = useContext(Store)
-
-    useEffect(() => {
-        state.episodes.length === 0 && fetchDataAction()
-    })
-
-    const fetchDataAction = () => {
-        const URL =
-            'https://api.tvmaze.com/singlesearch/shows?q=rick-&-morty&embed=episodes'
-
-        fetch(URL)
-            .then((data) => data.json())
-            .then((dataJSON) => {
-                return dispatch({
-                    type: 'FETCH_DATA',
-                    payload: dataJSON._embedded.episodes,
-                })
-            })
-
-        // const data = await fetch(URL)
-        // const dataJSON = await data.json()
-        // return dispatch({
-        //     type: 'FETCH_DATA',
-        //     payload,
-        // })
-    }
-
-    const toggleFavAction = (episode: IEpisode): IAction => {
-        const episodeInFav = state.favorites.includes(episode)
-        let dispatchObj = {
-            type: 'ADD_FAV',
-            payload: episode,
-        }
-        if (episodeInFav) {
-            const favWithoutEpisode = state.favorites.filter(
-                (fav: IEpisode) => fav.id !== episode.id
-            )
-            dispatchObj = {
-                type: 'REMOVE_FAV',
-                payload: favWithoutEpisode,
-            }
-        }
-        return dispatch(dispatchObj)
-    }
-
-    const props = {
-        episodes: state.episodes,
-        toggleFavAction,
-        favorites: state.favorites,
-    }
-
-    console.log(state.favorites.length)
-
+export default function App(props: any): JSX.Element {
+    const { state } = useContext(Store)
+    // console.log(props.children.props.children[1].props.path)
     return (
         <Fragment>
             <header className="header">
                 <div>
                     <h1>Rick and Morty</h1>
-                </div>
-                <div>
                     <h3>Pick your favorite episode!!! </h3>
-                    <h3>Favorite(s): {state.favorites.length}</h3>
+                </div>
+                <div className="header-pages">
+                    <Link to="/">Home</Link>
+                    <Link to="/faves">
+                        Favorite(s): {state.favorites.length}
+                    </Link>
                 </div>
             </header>
-            <React.Suspense fallback={<div>loading...</div>}>
-                <section className="episode-layout">
-                    <EposodesList {...props} />
-                </section>
-            </React.Suspense>
+            {props.children}
         </Fragment>
     )
 }
